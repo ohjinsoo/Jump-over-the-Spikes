@@ -16,9 +16,12 @@ public class Player {
     private VertexArray mesh;
     private Texture texture;
 
+    private boolean dead = false;
     private boolean midAir = true;
     private Point pos = new Point();
     private float delta = 0.0f;
+    private final float JUMP_HEIGHT = 0.27f;
+    private final float GRAVITY_ACCEL = 0.016f;
 
     public Player() {
         float[] vertices = new float[]{
@@ -43,12 +46,15 @@ public class Player {
         texture = new Texture("res/square.png");
         mesh = new VertexArray(vertices, indices, tcs);
     }
-
+    public void die() {
+        delta = -JUMP_HEIGHT;
+        dead = true;
+    }
     public void update() {
         pos.y -= delta;
 
         if (Input.isKeyDown(GLFW_KEY_SPACE) && !midAir) {
-            delta = -0.2f;
+            delta = -JUMP_HEIGHT;
             midAir = true;
         }
         else
@@ -57,9 +63,9 @@ public class Player {
     }
 
     private void gravity() {
-        if (pos.y >= -3.3f)
-            delta += 0.01f;
-        else {
+        if (pos.y >= -3.10f)
+            delta += GRAVITY_ACCEL;
+        else if (!dead) {
             midAir = false;
             delta = 0;
         }
@@ -73,7 +79,15 @@ public class Player {
         Shader.PLAYER.disable();
     }
 
+    public float getSize() {
+        return SIZE;
+    }
+
     public float getX() {
         return pos.x;
+    }
+
+    public float getY() {
+        return pos.y;
     }
 }

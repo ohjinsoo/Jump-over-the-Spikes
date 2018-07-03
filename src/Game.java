@@ -7,6 +7,10 @@ import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.system.MemoryUtil;
 
+import javax.swing.*;
+
+import static javax.swing.JOptionPane.CANCEL_OPTION;
+import static javax.swing.JOptionPane.CLOSED_OPTION;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL13.*;
@@ -90,12 +94,15 @@ public class Game implements Runnable {
             long now = System.nanoTime();
             delta += (now - lastTime) / ns;
             lastTime = now;
+            render();
             if (delta >= 1.0) {
-                update();
+                running = update();
+                if (!running) {
+                    break;
+                }
                 updates++;
                 delta--;
             }
-            render();
             frames++;
 
             if (System.currentTimeMillis() - timer > 1000) {
@@ -113,9 +120,17 @@ public class Game implements Runnable {
         glfwTerminate();
     }
 
-    private void update() {
+    private boolean update() {
         glfwPollEvents();
-        level.update();
+        int res = level.update();
+        if (res == JOptionPane.OK_OPTION) {
+            level = new Level();
+        }
+        else if (res == CLOSED_OPTION || res == CANCEL_OPTION) {
+            return false;
+        }
+
+        return true;
     }
 
     private void render() {
