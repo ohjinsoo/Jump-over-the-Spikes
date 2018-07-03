@@ -12,7 +12,6 @@ import static org.lwjgl.glfw.GLFW.GLFW_KEY_SPACE;
 
 public class Player {
 
-    private float SIZE = 1.0f;
     private VertexArray mesh;
     private Texture texture;
 
@@ -20,15 +19,17 @@ public class Player {
     private boolean midAir = true;
     private Point pos = new Point();
     private float delta = 0.0f;
-    private final float JUMP_HEIGHT = 0.27f;
+    private final float JUMP_HEIGHT = 0.3f;
     private final float GRAVITY_ACCEL = 0.016f;
+    private static float width = 0.79f;
+    private static float height = 1.2f;
 
     public Player() {
         float[] vertices = new float[]{
-                -SIZE / 2.0f, -SIZE / 2.0f, 1.0f,
-                -SIZE / 2.0f,  SIZE / 2.0f, 1.0f,
-                 SIZE / 2.0f,  SIZE / 2.0f, 1.0f,
-                 SIZE / 2.0f, -SIZE / 2.0f, 1.0f
+                -width / 2.0f, -height / 2.0f, 0.2f,
+                -width / 2.0f,  height / 2.0f, 0.2f,
+                 width / 2.0f,  height / 2.0f, 0.2f,
+                 width / 2.0f, -height / 2.0f, 0.2f
         };
 
         byte[] indices = new byte[] {
@@ -43,7 +44,7 @@ public class Player {
                 1, 1
         };
 
-        texture = new Texture("res/square.png");
+        texture = new Texture("res/player.png");
         mesh = new VertexArray(vertices, indices, tcs);
     }
     public void die() {
@@ -79,8 +80,12 @@ public class Player {
         Shader.PLAYER.disable();
     }
 
-    public float getSize() {
-        return SIZE;
+    public static float getWidth() {
+        return width;
+    }
+
+    public static float getHeight() {
+        return height;
     }
 
     public float getX() {

@@ -12,8 +12,13 @@ import java.util.Random;
 
 public class Level {
 
-    private static final float SPEEDLIMIT = 0.155f;
     private static final float HITBOX_SHRINK = 0.1f;
+    private float DISTANCE_APART_AMOUNT = 9f;
+    private float prevDistance = 0.0f;
+
+    private static final float BEGIN_UPDATE_SPIKES = 500f;
+    private int updateRate = 55;
+
     private Texture bgTexture;
     private VertexArray background;
     private Player player;
@@ -21,15 +26,13 @@ public class Level {
     private Spikes[] spikes = new Spikes[SIZE];
 
     private int index = 0;
-    private float prevDistance = 0.0f;
     private int xScroll = 0;
     private int map = 0;
 
-    private float speedMultiplier = 0.11f;
-    private int updateMultiplier = 50;
 
     private boolean gameOver = false;
     private Random rand = new Random();
+    private static final float speedMultiplier = 0.12f;
 
     public Level() {
 
@@ -63,38 +66,28 @@ public class Level {
         Spikes.create();
 
         for (int i = 0; i < SIZE; i++) {
-            float distanceApart = 10f * ((rand.nextFloat() / 4.0f) + 0.6f) + prevDistance;
+            float distanceApart = DISTANCE_APART_AMOUNT * ((rand.nextFloat() / 4.0f) + 0.6f) + prevDistance;
             spikes[i] = new Spikes(distanceApart);
             prevDistance = distanceApart;
         }
     }
 
     private void updateSpikes() {
-        float distanceApart = 10f * ((rand.nextFloat() / 4.0f) + 0.6f) + prevDistance;
+        float distanceApart = DISTANCE_APART_AMOUNT * ((rand.nextFloat() / 4.0f) + 0.6f) + prevDistance;
         spikes[index % SIZE] = new Spikes(distanceApart);
+
         prevDistance = distanceApart;
         index = (index + 1) % SIZE;
-
-    }
-
-    private void speedUp() {
-        speedMultiplier /= 0.9999;
-        if (xScroll % 20 == 0) {
-        }
     }
 
     public int update() {
         if (!gameOver && !collision()) {
             System.out.println("Scroll: " + xScroll);
-            System.out.println("speed: " + speedMultiplier);
 
             xScroll--;
-            if (speedMultiplier < SPEEDLIMIT) {
-                speedUp();
-            }
 
-            if (-xScroll % 120 == 0) map++;
-            if (-xScroll > 400 && -xScroll % updateMultiplier == 0)
+            if (-xScroll % 116 == 0) map++;
+            if (-xScroll > BEGIN_UPDATE_SPIKES && -xScroll % updateRate == 0)
                 updateSpikes();
         }
         else {
@@ -156,10 +149,10 @@ public class Level {
             float spikesX = spikes[i].getX();
             float spikesY = spikes[i].getY();
 
-            float playerX0 = playerX - player.getSize() / 2;
-            float playerX1 = playerX + player.getSize() / 2;
-            float playerY0 = playerY - player.getSize() / 2;
-            float playerY1 = playerY + player.getSize() / 2;
+            float playerX0 = playerX - Player.getWidth() / 2;
+            float playerX1 = playerX + Player.getWidth() / 2;
+            float playerY0 = playerY - Player.getHeight() / 2;
+            float playerY1 = playerY + Player.getHeight() / 2;
 
             float spikesX0 = spikesX;
             float spikesX1 = spikesX + Spikes.getWidth();
@@ -173,13 +166,5 @@ public class Level {
             }
         }
         return false;
-    }
-
-    public boolean isGameOver() {
-        return gameOver;
-    }
-
-    public void restart() {
-
     }
 }

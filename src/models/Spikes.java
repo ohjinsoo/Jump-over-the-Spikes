@@ -8,7 +8,8 @@ import math.Point;
 public class Spikes {
 
     private Point pos = new Point();
-    private static float width = 1.2f;
+    private static float width = 2.4f;
+    private static float height = 1.2f;
     private static Texture texture;
     private Matrix ml_matrix;
     private static VertexArray mesh;
@@ -16,8 +17,8 @@ public class Spikes {
     public static void create() {
         float[] vertices = new float[]{
                 0.0f , 0.0f  , 0.1f,
-                0.0f , width, 0.1f,
-                width, width, 0.1f,
+                0.0f , height, 0.1f,
+                width, height, 0.1f,
                 width, 0.0f  , 0.1f
         };
 
@@ -64,7 +65,7 @@ public class Spikes {
     }
 
     public static float getHeight() {
-        return width;
+        return height;
     }
 
     public Matrix getModelMatrix() {
