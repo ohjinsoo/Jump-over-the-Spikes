@@ -114,10 +114,12 @@ public class Game implements Runnable {
 
             if (glfwWindowShouldClose(window))
                 running = false;
-            }
+        }
 
+        System.out.println("closing!!!");
         glfwDestroyWindow(window);
         glfwTerminate();
+        System.exit(0);
     }
 
     private boolean update() {

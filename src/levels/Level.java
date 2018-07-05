@@ -19,6 +19,7 @@ public class Level {
     private static final float BEGIN_UPDATE_SPIKES = 500f;
     private int updateRate = 55;
 
+    private UI ui = new UI();
     private Texture bgTexture;
     private VertexArray background;
     private Player player;
@@ -95,7 +96,7 @@ public class Level {
                 deathAnimation();
             gameOver = true;
             if (player.getY() <= -10.0f)
-               return UI.displayOptions("Your score was " + -xScroll + "! Would you like to restart?");
+               return ui.displayOptions("Your score was " + -xScroll + "! Would you like to restart?");
         }
         player.update();
         return 1;
